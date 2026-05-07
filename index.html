@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Find Your Seat ✦</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --gold: #B8860B;
+      --gold-light: #D4A017;
+      --gold-pale: #F5EDD6;
+      --gold-dark: #7A5800;
+      --white: #FDFAF4;
+      --off-white: #F0E8D0;
+      --text: #1A1008;
+      --text-light: #5C4010;
+    }
+
+```
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: var(--white);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Ornamental Background ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 100% 100%, rgba(201,168,76,0.05) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Corner Ornaments ── */
+.corner {
+  position: fixed;
+  width: 120px;
+  height: 120px;
+  opacity: 0.18;
+  pointer-events: none;
+  z-index: 0;
+}
+.corner svg { width: 100%; height: 100%; }
+.corner-tl { top: 16px; left: 16px; }
+.corner-tr { top: 16px; right: 16px; transform: scaleX(-1); }
+.corner-bl { bottom: 16px; left: 16px; transform: scaleY(-1); }
+.corner-br { bottom: 16px; right: 16px; transform: scale(-1); }
+
+/* ── Main Container ── */
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 60px 24px 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+/* ── Header ── */
+.header {
+  text-align: center;
+  margin-bottom: 48px;
+  animation: fadeDown 0.9s ease both;
+}
+
+.header .divider-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.divider-line {
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.divider-diamond {
+  color: var(--gold);
+  font-size: 10px;
+  line-height: 1;
+}
+
+.header h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(2.4rem, 8vw, 3.8rem);
+  letter-spacing: 0.04em;
+  color: var(--text);
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+.header h1 em {
+  font-style: italic;
+  color: var(--gold-dark);
+}
+
+.header .subtitle {
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-light);
+  margin-top: 10px;
+  font-weight: 400;
+}
+
+.divider-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+/* ── Search Box ── */
+.search-wrapper {
+  width: 100%;
+  max-width: 460px;
+  position: relative;
+  animation: fadeUp 0.9s 0.2s ease both;
+  margin-bottom: 12px;
+}
+
+.search-wrapper input {
+  width: 100%;
+  padding: 18px 52px 18px 24px;
+  border: 1px solid var(--gold-light);
+  border-radius: 2px;
+  background: rgba(255,255,255,0.85);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.15rem;
+  font-weight: 400;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  text-align: left;
+}
+.search-wrapper input::placeholder {
+  color: var(--gold-light);
+  font-style: italic;
+}
+.search-wrapper input:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201,168,76,0.1), 0 4px 20px rgba(201,168,76,0.08);
+}
+
+.search-icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gold);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* ── Results ── */
+.results-area {
+  width: 100%;
+  max-width: 460px;
+  min-height: 80px;
+  animation: fadeUp 0.9s 0.3s ease both;
+}
+
+.result-card {
+  background: linear-gradient(135deg, #fff 0%, var(--off-white) 100%);
+  border: 1px solid var(--gold-light);
+  border-radius: 2px;
+  padding: 28px 32px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  box-shadow: 0 8px 40px rgba(201,168,76,0.1);
+}
+
+.result-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.result-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.result-card .guest-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 14px;
+  letter-spacing: 0.02em;
+}
+
+.result-card .table-label {
+  font-size: 0.62rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-light);
+  margin-bottom: 4px;
+}
+
+.result-card .table-number {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3rem;
+  font-weight: 300;
+  color: var(--gold-dark);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.result-card .table-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--text-light);
+}
+
+.ornament-result {
+  color: var(--gold);
+  opacity: 0.7;
+  font-size: 18px;
+  margin: 12px 0;
+  letter-spacing: 8px;
+}
+
+/* ── Not Found ── */
+.not-found {
+  text-align: center;
+  padding: 32px 0;
+  animation: fadeUp 0.4s ease both;
+}
+.not-found .nf-icon {
+  font-size: 1.6rem;
+  margin-bottom: 10px;
+  opacity: 0.4;
+}
+.not-found p {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--text-light);
+}
+
+/* ── Multiple Results ── */
+.multi-result {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.multi-result .result-card {
+  padding: 20px 28px;
+}
+
+/* ── Edit Section ── */
+.edit-toggle {
+  margin-top: 56px;
+  text-align: center;
+  animation: fadeUp 0.9s 0.4s ease both;
+}
+
+.edit-btn {
+  background: none;
+  border: 1px solid var(--gold-light);
+  color: var(--text-light);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 10px 24px;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+.edit-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold-dark);
+  background: rgba(201,168,76,0.04);
+}
+
+/* ── Editor Panel ── */
+.editor-panel {
+  display: none;
+  width: 100%;
+  max-width: 640px;
+  margin-top: 32px;
+  background: var(--off-white);
+  border: 1px solid var(--gold-light);
+  border-radius: 2px;
+  padding: 32px;
+  animation: fadeUp 0.4s ease both;
+}
+.editor-panel.open { display: block; }
+
+.editor-panel h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-size: 1.3rem;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.editor-panel p.hint {
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: var(--text-light);
+  margin-bottom: 20px;
+  line-height: 1.7;
+}
+
+.editor-panel textarea {
+  width: 100%;
+  min-height: 260px;
+  padding: 16px;
+  border: 1px solid var(--gold-light);
+  border-radius: 2px;
+  background: white;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  color: var(--text);
+  resize: vertical;
+  outline: none;
+  direction: ltr;
+  transition: border-color 0.3s;
+  line-height: 1.8;
+}
+.editor-panel textarea:focus {
+  border-color: var(--gold);
+}
+
+.editor-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.btn-save {
+  padding: 12px 28px;
+  background: var(--gold);
+  color: white;
+  border: none;
+  border-radius: 2px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.btn-save:hover { background: var(--gold-dark); }
+
+.btn-cancel {
+  padding: 12px 20px;
+  background: none;
+  color: var(--text-light);
+  border: 1px solid var(--gold-light);
+  border-radius: 2px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.btn-cancel:hover { border-color: var(--gold); color: var(--gold-dark); }
+
+.save-msg {
+  display: none;
+  font-size: 0.7rem;
+  color: var(--gold-dark);
+  letter-spacing: 0.1em;
+  align-self: center;
+  font-style: italic;
+}
+.save-msg.show { display: block; }
+
+.format-hint {
+  background: rgba(201,168,76,0.06);
+  border-left: 3px solid var(--gold-light);
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  border-radius: 0 2px 2px 0;
+}
+.format-hint p {
+  font-size: 0.68rem;
+  color: var(--text-light);
+  line-height: 1.9;
+  margin: 0;
+}
+.format-hint code {
+  background: rgba(184,134,11,0.15);
+  padding: 1px 5px;
+  border-radius: 2px;
+  font-size: 0.72rem;
+  color: var(--gold-dark);
+  direction: ltr;
+  display: inline-block;
+}
+
+/* ── Animations ── */
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ── Footer ── */
+.footer {
+  margin-top: 64px;
+  text-align: center;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  animation: fadeUp 1s 0.5s ease both;
+}
+
+@media (max-width: 480px) {
+  .container { padding: 40px 16px 60px; }
+  .corner { width: 70px; height: 70px; }
+}
+```
+
+  </style>
+</head>
+<body>
+
+  <!-- Corner ornaments -->
+
+  <div class="corner corner-tl">
+    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M5 5 L5 95" stroke="#B8860B" stroke-width="1"/>
+      <path d="M5 5 L95 5" stroke="#B8860B" stroke-width="1"/>
+      <path d="M5 5 L30 5 L30 30 L5 30" stroke="#B8860B" stroke-width="0.5" fill="none"/>
+      <circle cx="5" cy="5" r="3" fill="#B8860B"/>
+      <path d="M15 15 L25 5 M5 25 L15 15" stroke="#B8860B" stroke-width="0.5"/>
+      <path d="M5 50 Q20 35 35 50 Q50 65 65 50" stroke="#B8860B" stroke-width="0.5" fill="none"/>
+    </svg>
+  </div>
+  <div class="corner corner-tr"></div>
+  <div class="corner corner-bl"></div>
+  <div class="corner corner-br"></div>
+
+  <div class="container">
+
+```
+<!-- Header -->
+<div class="header">
+  <div class="divider-top">
+    <div class="divider-line"></div>
+    <div class="divider-diamond">✦</div>
+    <div class="divider-line"></div>
+  </div>
+  <h1>Please Find Your <em>Seat</em></h1>
+  <p class="subtitle">Write your name &amp; discover your table</p>
+  <div class="divider-bottom">
+    <div class="divider-line"></div>
+    <div class="divider-diamond">✦</div>
+    <div class="divider-line"></div>
+  </div>
+</div>
+
+<!-- Search -->
+<div class="search-wrapper">
+  <input
+    type="text"
+    id="searchInput"
+    placeholder="Write your name here..."
+    oninput="handleSearch(this.value)"
+    autocomplete="off"
+    autocorrect="off"
+  />
+  <span class="search-icon">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+    </svg>
+  </span>
+</div>
+
+<!-- Results -->
+<div class="results-area" id="resultsArea"></div>
+
+<!-- Edit Toggle -->
+<div class="edit-toggle">
+  <button class="edit-btn" onclick="toggleEditor()">✦ Edit Seating List</button>
+</div>
+
+<!-- Editor Panel -->
+<div class="editor-panel" id="editorPanel">
+  <h2>Seating List</h2>
+  <p class="hint">Add guest names and table numbers or names below.</p>
+
+  <div class="format-hint">
+    <p>
+      Format: <code>Guest Name | Table Number</code> or <code>Guest Name | Table Name</code><br>
+      Example: <code>Anna Smith | Table 1</code> or <code>Anna Smith | Bride &amp; Groom Table</code><br>
+      One guest per line.
+    </p>
+  </div>
+
+  <textarea id="guestEditor" placeholder="Anna Smith | Table 1&#10;Mohamed Ali | طاولة الأصدقاء&#10;Sara Hassan | Table 2"></textarea>
+
+  <div class="editor-actions">
+    <button class="btn-save" onclick="saveGuests()">Save List</button>
+    <button class="btn-cancel" onclick="toggleEditor()">Close</button>
+    <span class="save-msg" id="saveMsg">✓ Saved</span>
+  </div>
+</div>
+
+<div class="footer">✦ &nbsp; &nbsp; ✦ &nbsp; &nbsp; ✦</div>
+```
+
+  </div>
+
+  <script>
+    // ── Data ─────────────────────────────────────────────
+    const STORAGE_KEY = 'seating_chart_guests';
+
+    // Default demo guests — replace or clear from editor
+    const DEFAULT_GUESTS = `Anna Smith | Table 1
+Mohamed Ali | طاولة الأصدقاء
+Sara Hassan | Table 2
+Ahmed Nour | Table 3`;
+
+    function loadGuests() {
+      const raw = localStorage.getItem(STORAGE_KEY) || DEFAULT_GUESTS;
+      return raw.trim().split('\n')
+        .map(line => {
+          const parts = line.split('|').map(s => s.trim());
+          if (parts.length >= 2 && parts[0] && parts[1]) {
+            return { name: parts[0], table: parts[1] };
+          }
+          return null;
+        })
+        .filter(Boolean);
+    }
+
+    function saveGuests() {
+      const val = document.getElementById('guestEditor').value.trim();
+      localStorage.setItem(STORAGE_KEY, val);
+      const msg = document.getElementById('saveMsg');
+      msg.classList.add('show');
+      setTimeout(() => msg.classList.remove('show'), 2000);
+      handleSearch(document.getElementById('searchInput').value);
+    }
+
+    // ── Search ────────────────────────────────────────────
+    function handleSearch(query) {
+      const area = document.getElementById('resultsArea');
+      const q = query.trim().toLowerCase();
+      if (!q) { area.innerHTML = ''; return; }
+
+      const guests = loadGuests();
+      const matches = guests.filter(g => g.name.toLowerCase().includes(q));
+
+      if (matches.length === 0) {
+        area.innerHTML = `
+          <div class="not-found">
+            <div class="nf-icon">✦</div>
+            <p>Name not found in the list</p>
+          </div>`;
+        return;
+      }
+
+      if (matches.length === 1) {
+        area.innerHTML = buildCard(matches[0]);
+      } else {
+        area.innerHTML = `<div class="multi-result">${matches.map(buildCard).join('')}</div>`;
+      }
+    }
+
+    function buildCard(guest) {
+      const tableDisplay = guest.table;
+      // Try to detect if it's a number-based table
+      const numMatch = guest.table.match(/\d+/);
+      const num = numMatch ? numMatch[0] : null;
+      const label = num && guest.table.replace(/\d+/, '').trim()
+        ? guest.table.replace(/\d+/, '').trim()
+        : (num ? 'Table' : '');
+
+      return `
+        <div class="result-card">
+          <div class="guest-name">${escHtml(guest.name)}</div>
+          <div class="ornament-result">✦ ✦ ✦</div>
+          <div class="table-label">Your Table</div>
+          ${num
+            ? `<div class="table-number">${escHtml(num)}</div><div class="table-name">${escHtml(label || guest.table)}</div>`
+            : `<div class="table-number" style="font-size:1.6rem;margin:8px 0">${escHtml(tableDisplay)}</div>`
+          }
+        </div>`;
+    }
+
+    function escHtml(str) {
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    // ── Editor ────────────────────────────────────────────
+    function toggleEditor() {
+      const panel = document.getElementById('editorPanel');
+      const isOpen = panel.classList.contains('open');
+      if (!isOpen) {
+        const raw = localStorage.getItem(STORAGE_KEY) || DEFAULT_GUESTS;
+        document.getElementById('guestEditor').value = raw;
+      }
+      panel.classList.toggle('open');
+    }
+
+    // ── Enter key ─────────────────────────────────────────
+    document.getElementById('searchInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') handleSearch(e.target.value);
+    });
+  </script>
+
+</body>
+</html>
