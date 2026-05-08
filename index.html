@@ -547,10 +547,117 @@ body::before {
     const STORAGE_KEY = 'seating_chart_guests';
 
     // Default demo guests — replace or clear from editor
-    const DEFAULT_GUESTS = `Anna Smith | Table 1
-Mohamed Ali | طاولة الأصدقاء
-Sara Hassan | Table 2
-Ahmed Nour | Table 3`;
+    const DEFAULT_GUESTS = `George Keriakes | Table 1
+Suzan Iskarous | Table 1
+Violet Iskarous | Table 1
+Labib Labib | Table 1
+Mervat Iskarous | Table 1
+Yousry Habib | Table 1
+Magdy Saad | Table 1
+Madlen Saad | Table 1
+Eveleen Estfanous | Table 2
+Ayman Ezzat | Table 2
+Michael Ezzat | Table 2
+Peter Ezzat | Table 2
+Madonna Khalil | Table 2
+Aziz Khalil | Table 2
+Mira Khalil | Table 2
+Hany Khalil | Table 2
+Amany Saleh | Table 2
+Thomas Thomas | Table 3
+Youanes Thomas | Table 3
+Andrew Abdelsaed | Table 3
+Susana Abdelsaed | Table 3
+George Habib | Table 3
+Julia Habib | Table 3
+Monica Habib | Table 3
+Youssef Sadek | Table 3
+Maria Danial | Table 3
+Bavly Abdelmesih | Table 4
+Girom Abdelmesih | Table 4
+Andrew Abdelmesih | Table 4
+Mariam Nssem | Table 4
+Bishoy Dahab  | Table 4
+Merna Ghaly | Table 4
+Kerolos Samy  | Table 4
+Roger Matta | Table 4
+George Beshay  | Table 4
+Youssef Yakoub | Table 4
+Arsany Khalel | Table 5
+Selvia Rezk | Table 5
+Kero Ashraf | Table 5
+Mariam Rady | Table 5
+Shenoda Botros  | Table 5
+Vivian Hennes | Table 5
+Marco wadea | Table 5
+Mariam Owida | Table 5
+Mina Fawzy  | Table 5
+Karolen Ebrahim | Table 5
+Osama  | Table 5
+Emad Thomas | Table 6
+Enas Thomas | Table 6
+Ihab Sadek | Table 6
+Ales Sadek | Table 6
+Mariam Sadek | Table 6
+Youlious Milad | Table 6
+Sara Sadek | Table 6
+Ashraf  Abdelsaed | Table 6
+Carolyn Abdelsaed | Table 6
+Akram Abdelmesih | Table 7
+Marcil Ghaly | Table 7
+Gehan Thomas  | Table 7
+Refaat Dahab  | Table 7
+Mina Rofail | Table 7
+Neven Rofail | Table 7
+Manal Shehata | Table 7
+Botros Rofail | Table 7
+Olivia Moussa | Table 8
+Ebram Fahim | Table 8
+Mary Fawzi | Table 8
+Abanob Nakhla | Table 8
+Demiana Demetry | Table 8
+Monica Eskander | Table 8
+Mariam Ibrahim | Table 8
+Paul Abdelmalak | Table 8
+Irine Bekhit | Table 8
+Tomas Khairy | Table 8
+Peter Shokry | Table 9
+Ereny Shokry  | Table 9
+Mario Tawab | Table 9
+Ebram Dahab  | Table 9
+Bavly Alkiess | Table 9
+Keyrillos Dous | Table 9
+Kerolos Fakhry | Table 9
+Martina Fakhry | Table 9
+Clara Ghaly | Table 9
+Mina Gayed | Table 10
+Kerolos Dahab | Table 10
+Joshep Shohdy | Table 10
+Tony Magdy | Table 10
+Kerolos Ebid | Table 10
+Mina Botros | Table 10
+5tebto | Table 10
+Filobater Ekladdious | Table 10
+Fares Saed | Table 10
+Michael Gayed | Table 10
+Saad Khalil | Table 11
+Angele Dimitrey | Table 11
+Amil Dimitrey | Table 11
+Ayman Beshai | Table 11
+Rina Gerges | Table 11
+Mariam Mikhail | Table 11
+John Mikhail | Table 11
+Monica Mikhail | Table 11
+Peter khalil | Table 11
+Mina Ibrahim | Table 11
+Mark  | Table 11
+Fady Botros | Table 12
+Sandy Sabry | Table 12
+Abanob Sadek | Table 12
+Selvana Wanis | Table 12
+Andrew Rezk  | Table 12
+Marina Adel | Table 12
+Nabegh | Table 12`;
 
     function loadGuests() {
       const raw = localStorage.getItem(STORAGE_KEY) || DEFAULT_GUESTS;
